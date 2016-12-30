@@ -135,8 +135,7 @@
     CGPoint speedPoint = [gesture velocityInView:gesture.view];
     CGFloat speed = sqrtf(powf(speedPoint.x, 2)+ powf(speedPoint.y, 2));
     if (moveDistance > _minDistanceForNext || speed > _minSpeedForNext) {//移除card
-        [self hzy_removeACard:(HZYCardStackViewCard *)gesture.view velocity:speedPoint movedDistace:CGPointMake(moveWidth, moveHeight) complete:^{
-        }];
+        [self hzy_removeACard:(HZYCardStackViewCard *)gesture.view velocity:speedPoint movedDistace:CGPointMake(moveWidth, moveHeight)];
         [self hzy_loadNext];
     }else{//复原card
         [UIView animateWithDuration:.25 delay:0 usingSpringWithDamping:.6 initialSpringVelocity:.5 options:UIViewAnimationOptionCurveEaseInOut animations:^{
@@ -144,6 +143,10 @@
         } completion:^(BOOL finished) {
             
         }];
+    }
+    
+    if ([self hzy_delegateCanRespondSelector:@selector(cardStack:cardDidEndDragging:atIndex:)]) {
+        [self.delegate cardStack:self cardDidEndDragging:(HZYCardStackViewCard *)gesture.view atIndex:[_indexArray[[_visiableCards indexOfObject:gesture.view]] integerValue]];
     }
     
 //    NSLog(@"velocity:%@\nmoveWidth:%.2f, moveHeight:%.2f", NSStringFromCGPoint(speedPoint), moveWidth, moveHeight);
@@ -171,37 +174,23 @@
  @param velocity 拖拽手势的末速度
  @param moved 已经移动的位置，x为正则中心偏右，y为正则中心偏下，反之亦然
  */
-- (void)hzy_removeACard:(HZYCardStackViewCard *)card velocity:(CGPoint)velocity movedDistace:(CGPoint)moved complete:(void(^)())complete{
+- (void)hzy_removeACard:(HZYCardStackViewCard *)card velocity:(CGPoint)velocity movedDistace:(CGPoint)moved{
     NSInteger index = [_indexArray[[_visiableCards indexOfObject:card]] integerValue];
     [_indexArray removeObjectAtIndex:[_visiableCards indexOfObject:card]];
     [_visiableCards removeObject:card];
-    complete();
     if (index == _frontCardIndex) {
         _frontCardIndex++;
     }
     
-    
-//    UIPushBehavior *pushBehavior = [[UIPushBehavior alloc] initWithItems:@[card] mode:UIPushBehaviorModeInstantaneous];
-//    pushBehavior.pushDirection = CGVectorMake(2, .6);
-//    pushBehavior.magnitude = 300;
-//    [_dynamicAnimator addBehavior:pushBehavior];
-    [UIView animateWithDuration:.5 animations:^{
-        card.alpha = 0;
-    }completion:^(BOOL finished) {
-        card.alpha = 1;
+    [UIView animateWithDuration:.6 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+        card.center = velocity;
+    } completion:^(BOOL finished) {
         [card removeFromSuperview];
         [_reuseViewArray addObject:card];
         if ([self hzy_delegateCanRespondSelector:@selector(cardStack:cardDidRemove:atIndex:)]) {
             [self.delegate cardStack:self cardDidRemove:card atIndex:index];
         }
     }];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        dispatch_async(dispatch_get_main_queue(), ^{
-//            [pushBehavior removeItem:card];
-//            [_dynamicAnimator removeAllBehaviors];
-            
-        });
-    });
 }
 
 - (HZYCardStackViewCard *)hzy_loadACard:(NSUInteger)index{
@@ -261,7 +250,7 @@
             offsetY = offsetY + offset.y *index;
             break;
     }
-    [UIView animateWithDuration:0.25 delay:0 usingSpringWithDamping:0.6 initialSpringVelocity:0.6 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+    [UIView animateWithDuration:0.25 delay:0 usingSpringWithDamping:0.6 initialSpringVelocity:1 options:UIViewAnimationOptionCurveEaseInOut animations:^{
         //缩放
         card.transform = CGAffineTransformScale(CGAffineTransformIdentity, scalingRate, scalingRate);
         //偏移

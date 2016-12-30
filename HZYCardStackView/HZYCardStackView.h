@@ -27,6 +27,7 @@ typedef NS_ENUM(NSUInteger, HZYCardStackOffsetCurve) {
 @protocol HZYCardStackViewDelegate <NSObject>
 @optional
 - (void)cardStack:(HZYCardStackView *)cardStack cardWillBeginDragging:(HZYCardStackViewCard *)card atIndex:(NSUInteger)index;
+- (void)cardStack:(HZYCardStackView *)cardStack cardDidEndDragging:(HZYCardStackViewCard *)card atIndex:(NSUInteger)index;
 - (void)cardStack:(HZYCardStackView *)cardStack cardWillAppear:(HZYCardStackViewCard *)card atIndex:(NSUInteger)index;
 - (void)cardStack:(HZYCardStackView *)cardStack cardDidRemove:(HZYCardStackViewCard *)card atIndex:(NSUInteger)index;
 @end
@@ -40,6 +41,7 @@ typedef NS_ENUM(NSUInteger, HZYCardStackOffsetCurve) {
 @property (nonatomic, assign) CGFloat cardScalingRate;//后面图片的缩放比率，默认0.9
 @property (nonatomic, assign) CGPoint cardOffset;//后面图片的垂直偏移量，默认(0, -8)
 @property (nonatomic, assign) HZYCardStackOffsetCurve cardOffsetCurve;//默认HZYCardStackOffsetCurveSquareDecrease，看起来更自然
+
 
 //- (instancetype)initWithFrame:(CGRect)frame dataSource:(id<HZYCardStackViewDataSource>)dataSource NS_DESIGNATED_INITIALIZER;
 - (void)reloadData;

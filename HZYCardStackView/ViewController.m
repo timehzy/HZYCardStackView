@@ -29,7 +29,8 @@
     HZYCardStackView *cardStack = [[HZYCardStackView alloc]initWithFrame:CGRectOffset(self.view.bounds, 0, -60)];
     cardStack.dataSource = self;
     cardStack.delegate = self;
-    cardStack.numberOfCardsShown = 10;
+    cardStack.minDistanceForNext = 1000;
+    cardStack.numberOfCardsShown = 3;
     cardStack.cardOffset = CGPointMake(0, -8);
     cardStack.cardScalingRate = 0.92;
     [cardStack registerClass:[CustomCard class] forCardReuseIdentifier:@"hhh"];
