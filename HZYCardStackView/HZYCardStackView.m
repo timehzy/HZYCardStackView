@@ -67,17 +67,16 @@
 
 - (HZYCardStackViewCard *)dequeueReusableCardWithIdentifier:(NSString *)identifier{
     HZYCardStackViewCard *reuseCard;
-    if (_reuseViewArray.count > 0) {
-        for (HZYCardStackViewCard *card in _reuseViewArray) {
-            if ([card.reuseIdentifier isEqualToString:identifier]) {
-                card.transform = CGAffineTransformIdentity;
-                reuseCard = card;
-                [_reuseViewArray removeObject:card];
-                break;
-            }
+    for (HZYCardStackViewCard *card in _reuseViewArray) {
+        if ([card.reuseIdentifier isEqualToString:identifier]) {
+            card.transform = CGAffineTransformIdentity;
+            card.alpha = 1;
+            reuseCard = card;
+            [_reuseViewArray removeObject:card];
+            break;
         }
     }
-    if (_registedIdentifier && _registedClass) {
+    if (!reuseCard && _registedIdentifier && _registedClass) {
         NSAssert([_registedClass isSubclassOfClass:[HZYCardStackViewCard class]], @"rigister class must be a subclass of 'HZYCardStackViewCard'");
         reuseCard = [[_registedClass alloc]initWithReuseIdentifier:_registedIdentifier];
     }
@@ -182,10 +181,12 @@
         _frontCardIndex++;
     }
     
+    CGPoint targetPoint = velocity;
+    targetPoint.x += card.center.x;
+    targetPoint.y += card.center.y;
     [UIView animateWithDuration:.6 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-        CGPoint targetPoint = velocity;
-        targetPoint.x += card.center.x;
-        targetPoint.y += card.center.y;
+        card.alpha = 0.3;
+        card.transform = CGAffineTransformScale(card.transform, .5, .5);
         card.center = targetPoint;
     } completion:^(BOOL finished) {
         [card removeFromSuperview];
@@ -198,6 +199,7 @@
 
 - (HZYCardStackViewCard *)hzy_loadACard:(NSUInteger)index{
     HZYCardStackViewCard *card = [self.dataSource cardStack:self cardViewForIndex:index];
+    NSLog(@"%@", card);
     CGSize cardSize = [self.dataSource cardStack:self sizeForCardAtIndex:index];
     card.frame = CGRectMake(0, 0, cardSize.width, cardSize.height);
     card.center = _frontCardCenter;
