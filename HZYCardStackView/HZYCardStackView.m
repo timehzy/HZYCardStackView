@@ -183,7 +183,10 @@
     }
     
     [UIView animateWithDuration:.6 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-        card.center = velocity;
+        CGPoint targetPoint = velocity;
+        targetPoint.x += card.center.x;
+        targetPoint.y += card.center.y;
+        card.center = targetPoint;
     } completion:^(BOOL finished) {
         [card removeFromSuperview];
         [_reuseViewArray addObject:card];
