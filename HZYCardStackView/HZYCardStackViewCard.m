@@ -25,7 +25,7 @@
 }
 
 - (id)copyWithZone:(NSZone *)zone{
-    HZYCardStackViewCard *card = [[[self class] alloc] initWithReuseIdentifier:self.reuseIdentifier];
+    HZYCardStackViewCard *card = [[[self class] alloc] initWithReuseIdentifier:_reuseIdentifier];
     return card;
 }
 

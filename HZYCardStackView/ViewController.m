@@ -37,17 +37,17 @@
     self.cardStack = cardStack;
 }
 
-- (void)cardStack:(HZYCardStackView *)cardStack cardWillAppear:(HZYCardStackViewCard *)card atIndex:(NSUInteger)index{
-    NSLog(@"will appear:%zd", index);
-}
-
-- (void)cardStack:(HZYCardStackView *)cardStack cardDidRemove:(HZYCardStackViewCard *)card atIndex:(NSUInteger)index{
-    NSLog(@"did remove:%zd", index);
-}
-
-- (void)cardStack:(HZYCardStackView *)cardStack cardWillBeginDragging:(HZYCardStackViewCard *)card atIndex:(NSUInteger)index{
-    NSLog(@"will dragging:%zd", index);
-}
+//- (void)cardStack:(HZYCardStackView *)cardStack cardWillAppear:(HZYCardStackViewCard *)card atIndex:(NSUInteger)index{
+//    NSLog(@"will appear:%zd", index);
+//}
+//
+//- (void)cardStack:(HZYCardStackView *)cardStack cardDidRemove:(HZYCardStackViewCard *)card atIndex:(NSUInteger)index{
+//    NSLog(@"did remove:%zd", index);
+//}
+//
+//- (void)cardStack:(HZYCardStackView *)cardStack cardWillBeginDragging:(HZYCardStackViewCard *)card atIndex:(NSUInteger)index{
+//    NSLog(@"will dragging:%zd", index);
+//}
 
 - (NSUInteger)numberOfCards{
     return 99999;
