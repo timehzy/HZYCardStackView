@@ -17,25 +17,27 @@ typedef NS_ENUM(NSUInteger, HZYCardStackOffsetCurve) {
 @class HZYCardStackView;
 
 @protocol HZYCardStackViewDataSource <NSObject>
-- (NSUInteger)numberOfCards;
+@required
+- (NSUInteger)numberOfCards:(HZYCardStackView *)cardStack;
 - (HZYCardStackViewCard *)cardStack:(HZYCardStackView *)cardStack cardViewForIndex:(NSUInteger)index;
-- (CGSize)cardStack:(HZYCardStackView *)cardStack sizeForCardAtIndex:(NSUInteger)index;
 @optional
+- (CGSize)cardStack:(HZYCardStackView *)cardStack sizeForCardAtIndex:(NSUInteger)index;
 - (CGPoint)cardStack:(HZYCardStackView *)cardStack offsetForIndex:(NSInteger)index;
 @end
 
 @protocol HZYCardStackViewDelegate <NSObject>
 @optional
-- (void)cardStack:(HZYCardStackView *)cardStack cardWillBeginDragging:(HZYCardStackViewCard *)card atIndex:(NSUInteger)index;
-- (void)cardStack:(HZYCardStackView *)cardStack cardDidEndDragging:(HZYCardStackViewCard *)card atIndex:(NSUInteger)index;
-- (void)cardStack:(HZYCardStackView *)cardStack cardWillAppear:(HZYCardStackViewCard *)card atIndex:(NSUInteger)index;
-- (void)cardStack:(HZYCardStackView *)cardStack cardDidRemove:(HZYCardStackViewCard *)card atIndex:(NSUInteger)index;
+- (void)cardStack:(HZYCardStackView *)cardStack cardWillBeginDragging:(HZYCardStackViewCard *)card atIndex:(NSUInteger)index cardRemain:(NSUInteger)remain;
+- (void)cardStack:(HZYCardStackView *)cardStack cardDidEndDragging:(HZYCardStackViewCard *)card atIndex:(NSUInteger)index cardRemain:(NSUInteger)remain;
+- (void)cardStack:(HZYCardStackView *)cardStack cardWillAppear:(HZYCardStackViewCard *)card atIndex:(NSUInteger)index cardRemain:(NSUInteger)remain;
+- (void)cardStack:(HZYCardStackView *)cardStack cardDidRemove:(HZYCardStackViewCard *)card atIndex:(NSUInteger)index cardRemain:(NSUInteger)remain;
 @end
 
 @interface HZYCardStackView : UIView
 @property (nonatomic, weak) id<HZYCardStackViewDelegate> delegate;
 @property (nonatomic, weak) id<HZYCardStackViewDataSource> dataSource;
-@property (nonatomic, assign) NSUInteger numberOfCardsShown;//能看到几张卡片（加载几张卡片到界面）
+@property (nonatomic, assign) CGSize cardSize;
+@property (nonatomic, assign) NSUInteger numberOfCardsShown;//能看到几张卡片（加载几张卡片到界面）,默认3
 @property (nonatomic, assign) CGFloat minDistanceForNext;//拖拽到下一张卡片的最小距离, 默认160
 @property (nonatomic, assign) CGFloat minSpeedForNext;//拖拽到下一张卡片的最小速度，默认800
 @property (nonatomic, assign) CGFloat cardScalingRate;//后面图片的缩放比率，默认0.9
@@ -46,6 +48,7 @@ typedef NS_ENUM(NSUInteger, HZYCardStackOffsetCurve) {
 //- (instancetype)initWithFrame:(CGRect)frame dataSource:(id<HZYCardStackViewDataSource>)dataSource NS_DESIGNATED_INITIALIZER;
 - (void)reloadData;
 - (void)registerClass:(Class)cardClass forCardReuseIdentifier:(NSString *)identifier;
+- (void)registerNib:(UINib *)nib forCardReuseIdentifier:(NSString *)identifier;
 - (__kindof HZYCardStackViewCard *)dequeueReusableCardWithIdentifier:(NSString *)identifier;
 - (__kindof HZYCardStackViewCard *)cardForIndex:(NSInteger)index;
 @end

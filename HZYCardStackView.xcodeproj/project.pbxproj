@@ -7,18 +7,25 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4CA3647C1E1E1F4F00F92782 /* HZYCardStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CA3647B1E1E1F4F00F92782 /* HZYCardStackView.m */; };
+		4CA3647F1E1E1F9D00F92782 /* CustomNibView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CA3647E1E1E1F9D00F92782 /* CustomNibView.m */; };
+		4CA364811E1E1FA600F92782 /* CustomNibView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4CA364801E1E1FA600F92782 /* CustomNibView.xib */; };
 		4CB991A01E12001C00565DA2 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CB9919F1E12001C00565DA2 /* main.m */; };
 		4CB991A31E12001C00565DA2 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CB991A21E12001C00565DA2 /* AppDelegate.m */; };
 		4CB991A61E12001C00565DA2 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CB991A51E12001C00565DA2 /* ViewController.m */; };
 		4CB991A91E12001C00565DA2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4CB991A71E12001C00565DA2 /* Main.storyboard */; };
 		4CB991AB1E12001C00565DA2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4CB991AA1E12001C00565DA2 /* Assets.xcassets */; };
 		4CB991AE1E12001C00565DA2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4CB991AC1E12001C00565DA2 /* LaunchScreen.storyboard */; };
-		4CB991B71E12003E00565DA2 /* HZYCardStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CB991B61E12003E00565DA2 /* HZYCardStackView.m */; };
 		4CB991BA1E12006D00565DA2 /* HZYCardStackViewCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CB991B91E12006D00565DA2 /* HZYCardStackViewCard.m */; };
 		4CB991BD1E12487200565DA2 /* CustomCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CB991BC1E12487200565DA2 /* CustomCard.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4CA3647A1E1E1F4F00F92782 /* HZYCardStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HZYCardStackView.h; sourceTree = "<group>"; };
+		4CA3647B1E1E1F4F00F92782 /* HZYCardStackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HZYCardStackView.m; sourceTree = "<group>"; };
+		4CA3647D1E1E1F9D00F92782 /* CustomNibView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomNibView.h; sourceTree = "<group>"; };
+		4CA3647E1E1E1F9D00F92782 /* CustomNibView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomNibView.m; sourceTree = "<group>"; };
+		4CA364801E1E1FA600F92782 /* CustomNibView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CustomNibView.xib; sourceTree = "<group>"; };
 		4CB9919B1E12001C00565DA2 /* HZYCardStackView.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HZYCardStackView.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4CB9919F1E12001C00565DA2 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		4CB991A11E12001C00565DA2 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -29,8 +36,6 @@
 		4CB991AA1E12001C00565DA2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4CB991AD1E12001C00565DA2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		4CB991AF1E12001C00565DA2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		4CB991B51E12003E00565DA2 /* HZYCardStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HZYCardStackView.h; sourceTree = "<group>"; };
-		4CB991B61E12003E00565DA2 /* HZYCardStackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HZYCardStackView.m; sourceTree = "<group>"; };
 		4CB991B81E12006D00565DA2 /* HZYCardStackViewCard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HZYCardStackViewCard.h; sourceTree = "<group>"; };
 		4CB991B91E12006D00565DA2 /* HZYCardStackViewCard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HZYCardStackViewCard.m; sourceTree = "<group>"; };
 		4CB991BB1E12487200565DA2 /* CustomCard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomCard.h; sourceTree = "<group>"; };
@@ -72,6 +77,9 @@
 				4CB991A21E12001C00565DA2 /* AppDelegate.m */,
 				4CB991A41E12001C00565DA2 /* ViewController.h */,
 				4CB991A51E12001C00565DA2 /* ViewController.m */,
+				4CA3647D1E1E1F9D00F92782 /* CustomNibView.h */,
+				4CA3647E1E1E1F9D00F92782 /* CustomNibView.m */,
+				4CA364801E1E1FA600F92782 /* CustomNibView.xib */,
 				4CB991BB1E12487200565DA2 /* CustomCard.h */,
 				4CB991BC1E12487200565DA2 /* CustomCard.m */,
 				4CB991A71E12001C00565DA2 /* Main.storyboard */,
@@ -94,8 +102,8 @@
 		4CB991BE1E12488100565DA2 /* CardStackView */ = {
 			isa = PBXGroup;
 			children = (
-				4CB991B51E12003E00565DA2 /* HZYCardStackView.h */,
-				4CB991B61E12003E00565DA2 /* HZYCardStackView.m */,
+				4CA3647A1E1E1F4F00F92782 /* HZYCardStackView.h */,
+				4CA3647B1E1E1F4F00F92782 /* HZYCardStackView.m */,
 				4CB991B81E12006D00565DA2 /* HZYCardStackViewCard.h */,
 				4CB991B91E12006D00565DA2 /* HZYCardStackViewCard.m */,
 			);
@@ -162,6 +170,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4CB991AE1E12001C00565DA2 /* LaunchScreen.storyboard in Resources */,
+				4CA364811E1E1FA600F92782 /* CustomNibView.xib in Resources */,
 				4CB991AB1E12001C00565DA2 /* Assets.xcassets in Resources */,
 				4CB991A91E12001C00565DA2 /* Main.storyboard in Resources */,
 			);
@@ -176,10 +185,11 @@
 			files = (
 				4CB991BA1E12006D00565DA2 /* HZYCardStackViewCard.m in Sources */,
 				4CB991A61E12001C00565DA2 /* ViewController.m in Sources */,
+				4CA3647F1E1E1F9D00F92782 /* CustomNibView.m in Sources */,
 				4CB991A31E12001C00565DA2 /* AppDelegate.m in Sources */,
+				4CA3647C1E1E1F4F00F92782 /* HZYCardStackView.m in Sources */,
 				4CB991A01E12001C00565DA2 /* main.m in Sources */,
 				4CB991BD1E12487200565DA2 /* CustomCard.m in Sources */,
-				4CB991B71E12003E00565DA2 /* HZYCardStackView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

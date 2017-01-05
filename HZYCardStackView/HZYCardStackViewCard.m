@@ -21,7 +21,10 @@
 }
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder{
-    return [self initWithReuseIdentifier:nil];
+    if (self = [super initWithCoder:aDecoder]) {
+        
+    }
+    return self;
 }
 
 - (id)copyWithZone:(NSZone *)zone{

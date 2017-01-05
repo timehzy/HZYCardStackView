@@ -16,11 +16,12 @@
 @implementation HZYCardStackView{
     NSMutableArray<HZYCardStackViewCard *> *_reuseViewArray;
     NSMutableArray *_visiableCards;
-    NSMutableArray *_cardTranformArray;
     NSMutableArray *_indexArray;
-    CGPoint _frontCardCenter;
+    NSMutableArray *_cardTranformArray;
     NSUInteger _frontCardIndex;
     NSUInteger _lastCardIndex;
+    CGPoint _frontCardCenter;
+    UINib *_registedNib;
     NSString *_registedIdentifier;
     Class _registedClass;
     UIDynamicAnimator *_dynamicAnimator;
@@ -33,7 +34,7 @@
         _visiableCards = [NSMutableArray array];
         _indexArray = [NSMutableArray array];
         _numberOfCardsShown = 3;
-        _frontCardCenter = self.center;
+        _frontCardCenter = CGPointMake(self.bounds.size.width / 2, self.bounds.size.height / 2);
         _minSpeedForNext = 800;
         _minDistanceForNext = 160;
         _cardScalingRate = 0.9;
@@ -56,10 +57,16 @@
 - (void)reloadData{
     [_visiableCards removeAllObjects];
     [_indexArray removeAllObjects];
+    [_reuseViewArray removeAllObjects];
+    [_cardTranformArray removeAllObjects];
     [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    
     _frontCardIndex = 0;
-    _lastCardIndex = MIN(_numberOfCardsShown, [self.dataSource numberOfCards]);
-    for (NSInteger i=0; i<_lastCardIndex; i++) {
+    _lastCardIndex = MIN(_numberOfCardsShown, [self.dataSource numberOfCards:self])-1;
+    if ([self.dataSource numberOfCards:self] == 0) {
+        return;
+    }
+    for (NSInteger i=0; i<=_lastCardIndex; i++) {
         HZYCardStackViewCard *card = [self hzy_loadACard:i];
         [self hzy_showCard:card ForIndex:i];
     }
@@ -76,10 +83,22 @@
             break;
         }
     }
-    if (!reuseCard && _registedIdentifier && _registedClass) {
-        NSAssert([_registedClass isSubclassOfClass:[HZYCardStackViewCard class]], @"rigister class must be a subclass of 'HZYCardStackViewCard'");
-        reuseCard = [[_registedClass alloc]initWithReuseIdentifier:_registedIdentifier];
+    if (!reuseCard && _registedIdentifier) {
+        if ( _registedClass) {
+            NSAssert([_registedClass isSubclassOfClass:[HZYCardStackViewCard class]], @"rigister class must be a subclass of 'HZYCardStackViewCard'");
+            reuseCard = [[_registedClass alloc]initWithReuseIdentifier:_registedIdentifier];
+        }else if (_registedNib) {
+            reuseCard = [_registedNib instantiateWithOwner:nil options:nil].firstObject;
+            NSAssert([[reuseCard class] isSubclassOfClass:[HZYCardStackViewCard class]], @"rigister class must be a subclass of 'HZYCardStackViewCard'");
+            [reuseCard setValue:_registedIdentifier forKey:@"reuseIdentifier"];
+        }
     }
+    if (reuseCard) {
+        CGSize size = CGSizeEqualToSize(_cardSize, CGSizeZero) ? [self.dataSource cardStack:self sizeForCardAtIndex:_visiableCards.count] : _cardSize;
+        reuseCard.frame = CGRectMake(0, 0, size.width, size.height);
+        reuseCard.center = _frontCardCenter;
+    }
+
     return reuseCard;
 }
 
@@ -88,8 +107,13 @@
     _registedIdentifier = [identifier copy];
 }
 
+- (void)registerNib:(UINib *)nib forCardReuseIdentifier:(NSString *)identifier{
+    _registedNib = nib;
+    _registedIdentifier = identifier;
+}
+
 - (HZYCardStackViewCard *)cardForIndex:(NSInteger)index{
-    if (index >= [self.dataSource numberOfCards]) {
+    if (index >= [self.dataSource numberOfCards:self]) {
         return nil;
     }
     return [self.dataSource cardStack:self cardViewForIndex:index];
@@ -102,10 +126,13 @@
 
 - (void)hzy_cardViewPan:(UIPanGestureRecognizer *)gesture{
     switch (gesture.state) {
-        case UIGestureRecognizerStateBegan:
-            if ([self hzy_delegateCanRespondSelector:@selector(cardStack:cardWillBeginDragging:atIndex:)]) {
-                [self.delegate cardStack:self cardWillBeginDragging:(HZYCardStackViewCard *)gesture.view atIndex:[_indexArray[[_visiableCards indexOfObject:gesture.view]] integerValue]];
+        case UIGestureRecognizerStateBegan:{
+            NSUInteger index = [_indexArray[[_visiableCards indexOfObject:gesture.view]] integerValue];
+            NSUInteger cardRemain = [self.dataSource numberOfCards:self] - index;
+            if ([self hzy_delegateCanRespondSelector:@selector(cardStack:cardWillBeginDragging:atIndex:cardRemain:)]) {
+                [self.delegate cardStack:self cardWillBeginDragging:(HZYCardStackViewCard *)gesture.view atIndex:index cardRemain:cardRemain];
             }
+        }
             break;
         case UIGestureRecognizerStateChanged:{
             HZYCardStackViewCard *cardView = (HZYCardStackViewCard *)gesture.view;
@@ -128,6 +155,8 @@
 }
 
 - (void)hzy_finishedPanGesture:(UIPanGestureRecognizer *)gesture{
+    NSUInteger index = [_indexArray[[_visiableCards indexOfObject:gesture.view]] integerValue];
+    NSUInteger cardRemain = [self.dataSource numberOfCards:self] - index;
     CGFloat moveWidth  = (gesture.view.center.x  - _frontCardCenter.x);
     CGFloat moveHeight = (gesture.view.center.y - _frontCardCenter.y);
     CGFloat moveDistance = sqrtf(pow(moveWidth, 2) + pow(moveHeight, 2));
@@ -136,29 +165,25 @@
     if (moveDistance > _minDistanceForNext || speed > _minSpeedForNext) {//移除card
         [self hzy_removeACard:(HZYCardStackViewCard *)gesture.view velocity:speedPoint movedDistace:CGPointMake(moveWidth, moveHeight)];
         [self hzy_loadNext];
+        cardRemain--;
     }else{//复原card
         [UIView animateWithDuration:.25 delay:0 usingSpringWithDamping:.6 initialSpringVelocity:.5 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-            gesture.view.center = self.center;
+            gesture.view.center = _frontCardCenter;
         } completion:^(BOOL finished) {
             
         }];
     }
     
-    if ([self hzy_delegateCanRespondSelector:@selector(cardStack:cardDidEndDragging:atIndex:)]) {
-        [self.delegate cardStack:self cardDidEndDragging:(HZYCardStackViewCard *)gesture.view atIndex:[_indexArray[[_visiableCards indexOfObject:gesture.view]] integerValue]];
+    if ([self hzy_delegateCanRespondSelector:@selector(cardStack:cardDidEndDragging:atIndex:cardRemain:)]) {
+        [self.delegate cardStack:self cardDidEndDragging:(HZYCardStackViewCard *)gesture.view atIndex:index cardRemain:cardRemain];
     }
-    
-//    NSLog(@"velocity:%@\nmoveWidth:%.2f, moveHeight:%.2f", NSStringFromCGPoint(speedPoint), moveWidth, moveHeight);
-    
-    
 }
 
 - (void)hzy_loadNext{
-    if (_lastCardIndex+1 == [self.dataSource numberOfCards]) {
-        return;
+    if (_lastCardIndex+1 < [self.dataSource numberOfCards:self]) {
+        [self hzy_loadACard:++_lastCardIndex];
     }
-    [self hzy_loadACard:_lastCardIndex++];
-//    [_reuseViewArray removeObject:];
+
     for (NSUInteger i=0; i<_visiableCards.count; i++) {
         HZYCardStackViewCard *card = _visiableCards[i];
         [self hzy_showCard:card ForIndex:i];
@@ -174,13 +199,14 @@
  @param moved 已经移动的位置，x为正则中心偏右，y为正则中心偏下，反之亦然
  */
 - (void)hzy_removeACard:(HZYCardStackViewCard *)card velocity:(CGPoint)velocity movedDistace:(CGPoint)moved{
-    NSInteger index = [_indexArray[[_visiableCards indexOfObject:card]] integerValue];
+    NSUInteger index = [_indexArray[[_visiableCards indexOfObject:card]] integerValue];
     [_indexArray removeObjectAtIndex:[_visiableCards indexOfObject:card]];
     [_visiableCards removeObject:card];
     if (index == _frontCardIndex) {
         _frontCardIndex++;
     }
     
+    NSUInteger cardRemain = [self.dataSource numberOfCards:self] - index - 1;
     CGPoint targetPoint = velocity;
     targetPoint.x += card.center.x;
     targetPoint.y += card.center.y;
@@ -191,25 +217,22 @@
     } completion:^(BOOL finished) {
         [card removeFromSuperview];
         [_reuseViewArray addObject:card];
-        if ([self hzy_delegateCanRespondSelector:@selector(cardStack:cardDidRemove:atIndex:)]) {
-            [self.delegate cardStack:self cardDidRemove:card atIndex:index];
+        if ([self hzy_delegateCanRespondSelector:@selector(cardStack:cardDidRemove:atIndex:cardRemain:)]) {
+            [self.delegate cardStack:self cardDidRemove:card atIndex:index cardRemain:cardRemain];
         }
     }];
 }
 
 - (HZYCardStackViewCard *)hzy_loadACard:(NSUInteger)index{
+    NSUInteger cardRemain = [self.dataSource numberOfCards:self] - index;
     HZYCardStackViewCard *card = [self.dataSource cardStack:self cardViewForIndex:index];
-    NSLog(@"%@", card);
-    CGSize cardSize = [self.dataSource cardStack:self sizeForCardAtIndex:index];
-    card.frame = CGRectMake(0, 0, cardSize.width, cardSize.height);
-    card.center = _frontCardCenter;
     card.transform = CGAffineTransformScale(card.transform, 0.8, 0.8);
     [card addGestureRecognizer:[[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(hzy_cardViewPan:)]];
     [self insertSubview:card atIndex:0];
     [_visiableCards addObject:card];
     [_indexArray addObject:[NSNumber numberWithInteger:index]];
-    if ([self hzy_delegateCanRespondSelector:@selector(cardStack:cardWillAppear:atIndex:)]) {
-        [self.delegate cardStack:self cardWillAppear:card atIndex:index];
+    if ([self hzy_delegateCanRespondSelector:@selector(cardStack:cardWillAppear:atIndex:cardRemain:)]) {
+        [self.delegate cardStack:self cardWillAppear:card atIndex:index cardRemain:cardRemain];
     }
     return card;
 }
@@ -261,6 +284,7 @@
         //偏移
         card.transform = CGAffineTransformTranslate(card.transform, offsetX, offsetY);
     } completion:^(BOOL finished) {
+        
     }];
 }
 

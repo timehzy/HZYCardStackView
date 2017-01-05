@@ -14,5 +14,6 @@
 
 @interface HZYCardStackViewCard : UIView<NSCopying>
 - (instancetype)initWithReuseIdentifier:(NSString *)identifier NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithCoder:(NSCoder *)aDecoder NS_DESIGNATED_INITIALIZER;
 @property (nonatomic, copy, readonly) NSString *reuseIdentifier;
 @end

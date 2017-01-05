@@ -9,6 +9,8 @@
 #import "ViewController.h"
 #import "HZYCardStackView.h"
 #import "CustomCard.h"
+#import "CustomNibView.h"
+
 @interface ViewController ()<HZYCardStackViewDataSource, HZYCardStackViewDelegate>
 @property (nonatomic, strong) HZYCardStackView *cardStack;
 @property (nonatomic, copy) NSArray *dataArray;
@@ -33,7 +35,8 @@
     cardStack.numberOfCardsShown = 3;
     cardStack.cardOffset = CGPointMake(0, -8);
     cardStack.cardScalingRate = 0.92;
-    [cardStack registerClass:[CustomCard class] forCardReuseIdentifier:@"hhh"];
+//    [cardStack registerClass:[CustomCard class] forCardReuseIdentifier:@"hhh"];
+    [cardStack registerNib:[UINib nibWithNibName:@"CustomNibView" bundle:nil] forCardReuseIdentifier:@"hhh"];
     [self.view addSubview:cardStack];
     self.cardStack = cardStack;
 }
@@ -50,18 +53,18 @@
 //    NSLog(@"will dragging:%zd", index);
 //}
 
-- (NSUInteger)numberOfCards{
+- (NSUInteger)numberOfCards:(HZYCardStackView *)cardStack{
     return 99999;
 }
 
 - (HZYCardStackViewCard *)cardStack:(HZYCardStackView *)cardStack cardViewForIndex:(NSUInteger)index{
-    CustomCard *card = [cardStack dequeueReusableCardWithIdentifier:@"hhh"];
+    CustomNibView *card = [cardStack dequeueReusableCardWithIdentifier:@"hhh"];
     if (index % 2) {
         card.backgroundColor = [UIColor blueColor];
     }else{
         card.backgroundColor = [UIColor redColor];
     }
-    card.imageView.image = self.dataArray[index % 9];
+    card.image = self.dataArray[index % 9];
     return card;
 }
 
