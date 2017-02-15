@@ -9,9 +9,29 @@
 			<key>orderHint</key>
 			<integer>0</integer>
 		</dict>
+		<key>jj.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>2</integer>
+		</dict>
+		<key>jjjj.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>1</integer>
+		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
+		<key>4C350D5C1E4DC1C1003495C3</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>4C350D6A1E4DC1D0003495C3</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>4CB9919A1E12001C00565DA2</key>
 		<dict>
 			<key>primary</key>
